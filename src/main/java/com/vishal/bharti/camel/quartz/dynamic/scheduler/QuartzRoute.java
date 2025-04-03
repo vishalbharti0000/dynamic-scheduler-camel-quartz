@@ -2,6 +2,7 @@ package com.vishal.bharti.camel.quartz.dynamic.scheduler;
 
 import org.apache.camel.Route;
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -11,6 +12,9 @@ import java.util.Date;
 
 @Component
 public class QuartzRoute extends RouteBuilder {
+
+    @Autowired
+    private RepoService repoService;
 
     @Override
     public void configure() throws Exception {
@@ -92,5 +96,12 @@ public class QuartzRoute extends RouteBuilder {
                     });
                 })
                 .log("Job ${header.jobName} scheduled successfully for ${header.startTime}");
+
+
+        from("quartz://postConstruct?trigger.repeatCount=0")
+                .log("scheuled job post construct")
+                .process(exchange -> repoService.test())
+                .log("task execution")
+                .log("post construct job completed");
     }
 }
