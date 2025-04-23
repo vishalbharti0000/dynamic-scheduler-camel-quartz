@@ -94,6 +94,7 @@ public class QuartzRoute extends RouteBuilder {
                                     .to("direct:cancelJob");
                         }
                     });
+                    exchange.getMessage().setBody(String.format("Job '%s' scheduled successfully.", jobName));
                 })
                 .log("Job ${header.jobName} scheduled successfully for ${header.startTime}");
 

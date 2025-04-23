@@ -6,9 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class RepoService {
+    static int i = 0;
 
     public void test() {
-        log.info("repo task executing");
+        log.info("repo task executing: job" + i++ );
     }
 
 }

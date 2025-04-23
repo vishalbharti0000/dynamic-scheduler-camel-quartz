@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 public class Controller {
@@ -20,8 +21,12 @@ public class Controller {
         headers.put("jobName", "mySingleRunJob");
         headers.put("startTime", "2025-01-17T00:49:00"); // ISO-8601 format
 
-        template.asyncRequestBodyAndHeaders("direct:scheduleJob", null, headers);
-        return "scheduled";
+        try {
+            String response = (String) template.asyncRequestBodyAndHeaders("direct:scheduleJob", null, headers).get();
+            return response;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/dsh")
